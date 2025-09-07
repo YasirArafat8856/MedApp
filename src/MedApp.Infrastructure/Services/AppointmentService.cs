@@ -25,8 +25,13 @@ public class AppointmentService : IAppointmentService
 
         if (!string.IsNullOrWhiteSpace(search))
         {
-            var like = $"%{search.ToLower()}%";
-            q = q.Where(a => a.Patient!.FullName.ToLower().Contains(like) || a.Doctor!.FullName.ToLower().Contains(like));
+            var term = search.ToLower();
+            q = q.Where(a =>
+                a.Patient!.FullName.ToLower().Contains(term) ||
+                a.Doctor!.FullName.ToLower().Contains(term));
+
+            //var like = $"%{search.ToLower()}%";
+            //q = q.Where(a => a.Patient!.FullName.ToLower().Contains(like) || a.Doctor!.FullName.ToLower().Contains(like));
         }
         if (doctorId.HasValue) q = q.Where(a => a.DoctorId == doctorId);
         if (visitType.HasValue) q = q.Where(a => (int)a.VisitType == visitType);
