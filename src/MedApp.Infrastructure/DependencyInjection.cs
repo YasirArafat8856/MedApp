@@ -1,4 +1,5 @@
 using MedApp.Application.Interfaces;
+using MedApp.Infrastructure.Email;
 using MedApp.Infrastructure.Persistence;
 using MedApp.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ public static class DependencyInjection
 
         services.AddScoped<IAppointmentService, AppointmentService>();
         services.AddScoped<ILookupService, LookupService>();
+        services.AddScoped<IEmailSender, EmailSender>();
 
         return services;
     }

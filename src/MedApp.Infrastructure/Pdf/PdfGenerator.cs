@@ -7,6 +7,10 @@ namespace MedApp.Infrastructure.Pdf;
 
 public static class PdfGenerator
 {
+    static PdfGenerator()
+    {
+        QuestPDF.Settings.License = LicenseType.Community;
+    }
     public static byte[] Build(AppointmentDto a)
     {
         var doc = Document.Create(container =>

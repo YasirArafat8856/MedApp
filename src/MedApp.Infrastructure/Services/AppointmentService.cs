@@ -3,6 +3,7 @@ using MedApp.Application.DTOs;
 using MedApp.Application.Interfaces;
 using MedApp.Domain.Entities;
 using MedApp.Domain.Enums;
+using MedApp.Infrastructure.Email;
 using MedApp.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +12,8 @@ namespace MedApp.Infrastructure.Services;
 public class AppointmentService : IAppointmentService
 {
     private readonly MedAppDbContext _db;
-    public AppointmentService(MedAppDbContext db) => _db = db;
+    private readonly IEmailSender _emailSender;
+    public AppointmentService(MedAppDbContext db, IEmailSender emailSender) { _db = db; _emailSender = emailSender; }
 
     public async Task<PagedResult<AppointmentListItemDto>> ListAsync(
         string? search, int? doctorId, int? visitType, DateOnly? dateFrom, DateOnly? dateTo, int page, int pageSize, CancellationToken ct)
@@ -139,13 +141,31 @@ public class AppointmentService : IAppointmentService
     // --- PDF & Email ---
     public async Task<byte[]> BuildPdfAsync(int id, CancellationToken ct)
     {
-        var dto = await GetAsync(id, ct) ?? throw new KeyNotFoundException("Appointment not found");
-        return Pdf.PdfGenerator.Build(dto);
+        try
+        {
+            var dto = await GetAsync(id, ct) ?? throw new KeyNotFoundException("Appointment not found");
+            return Pdf.PdfGenerator.Build(dto);
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
+        
     }
 
     public async Task SendEmailWithPdfAsync(int id, string toEmail, CancellationToken ct)
     {
-        var bytes = await BuildPdfAsync(id, ct);
-        await Email.EmailSender.SendAsync(toEmail, "Prescription Report", "Please find the attached prescription report.", bytes, $"Prescription_{id}.pdf", ct);
+        try
+        {
+            var bytes = await BuildPdfAsync(id, ct);
+            await _emailSender.SendAsync(toEmail, "Prescription Report", "Please find the attached prescription report.", bytes, $"Prescription_{id}.pdf", ct);
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
+        
     }
 }

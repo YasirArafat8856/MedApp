@@ -1,4 +1,4 @@
--- Optional stored procedures (preferred). Run manually after creating DB.
+
 
 -- Table type for bulk details
 IF TYPE_ID(N'dbo.PrescriptionDetailType') IS NULL
