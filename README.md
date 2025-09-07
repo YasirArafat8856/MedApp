@@ -1,6 +1,6 @@
 # Medical Appointment System (Clean Architecture, .NET 8 + EF Core + SQL Server)
 
-This repo contains a **working .NET 8 Web API** that satisfies the interview requirements:
+This repo contains a **working .NET 8 Web API** :
 
 - Master entity **Appointment** with detail grid **PrescriptionDetail**.
 - CRUD endpoints for appointments (create with details, update with details, delete).
@@ -26,18 +26,19 @@ src/
 
 ## Run locally (Visual Studio)
 
-1. Open **MedApp.sln** in Visual Studio 2022 (v17+).
+1. Open **MedApp.sln** in Visual Studio 2022.
 2. Ensure SQL Server is running and adjust `ConnectionStrings:DefaultConnection` in `src/MedApp.API/appsettings.json` if needed.
 3. **Create database** via EF Core:
+   - already provided a migration. if you want to recreate new database then remove migration file and follow bellow
    - Open **Package Manager Console** and set `Default project` = `MedApp.Infrastructure`.
    - Run:
      ```powershell
      Add-Migration InitialCreate
      Update-Database
      ```
-4. (Optional) Execute the stored procedures script:
+5. (Optional) Execute the stored procedures script:
    - Open the DB in SSMS and run: `/src/MedApp.Infrastructure/Database/StoredProcedures.sql`.
-5. Set **MedApp.API** as startup project and **Run** (F5). Swagger will open.
+6. Set **MedApp.API** as startup project and **Run** (F5). Swagger will open in - https://localhost:53313/swagger/index.html
 
 ## Important endpoints
 
@@ -80,11 +81,5 @@ src/
 - Email uses **localhost:25**. Configure SMTP for your environment if you want to actually send.
 - The list endpoint is EF LINQ for simplicity. If your reviewer insists on stored procedures, use the provided SQL (and you can easily call it with `FromSqlRaw` / `ExecuteSqlRaw` in the Infrastructure layer).
 
-## Angular (coming next)
+### get Database backup file from - https://drive.google.com/file/d/1nUvch8Y-ug3q_V4DgUSUBK-3OulK_s-E/view?usp=sharing
 
-The API is ready for an Angular client with:
-- Master form (Appointment create/edit).
-- Inline editable **detail grid** for prescriptions.
-- Master **grid** with search, filter, pagination, and actions (Edit, Delete, Download PDF).
-
-Good luck on the interview!
